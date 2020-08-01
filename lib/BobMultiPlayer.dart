@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import 'BobWCDPlayer.dart';
@@ -56,12 +55,35 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
   bool isYouTubePlayer = false;
 
   void listener() {
-    if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
-      setState(() {
-        _playerState = _controller.value.playerState;
-        _videoMetaData = _controller.metadata;
-      });
+//    if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
+//        _playerState = _controller.value.playerState;
+//        _videoMetaData = _controller.metadata;
+//    }
+
+    if (widget.playerState != null && mounted) {
+      if (_playerState != _controller.value.playerState)
+        switch (_controller.value.playerState) {
+          case PlayerState.cued :
+            widget.playerState("ready", null);
+            break;
+          case PlayerState.unStarted :
+            widget.playerState("ready", null);
+            break;
+          case PlayerState.buffering :
+            widget.playerState("buffering", null);
+            break;
+          case PlayerState.ended :
+            widget.playerState("complete", null);
+            break;
+          case PlayerState.paused :
+            widget.playerState("pause", null);
+            break;
+          case PlayerState.playing :
+            widget.playerState("play", null);
+            break;
+        }
     }
+    _playerState = _controller.value.playerState;
   }
 
   YoutubePlayer createYoutubePlayer(String vid) {
@@ -76,7 +98,7 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
         forceHD: false,
         enableCaption: true,
       ),
-    );
+    )..addListener(listener);
 
     return YoutubePlayer(
       controller: _controller,
@@ -115,7 +137,9 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
           _wcdPlayerObj?.setSouce(src);
         },
           playerState: (value, param){
-            print("----"+value+"," +  param.toString() );
+            if (widget.playerState != null && mounted) {
+              widget.playerState(value, param);
+            }
           },);
       });
     }
@@ -140,8 +164,28 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
   }
 
   //          Returns String
-//          – VALUE : idle , playing , pause , buffering
+  //          – VALUE : idle , playing , pause , buffering
   Future<String> getState() async {
-    return await _wcdPlayerObj.getState();
+    if (!isYouTubePlayer)
+      return await _wcdPlayerObj.getState();
+    else {
+      switch (_playerState) {
+        case PlayerState.cued :
+          return "ready";
+        case PlayerState.unStarted :
+          return "ready";
+        case PlayerState.buffering :
+          return "buffering";
+        case PlayerState.ended :
+          return "complete";
+        case PlayerState.paused :
+          return "pause";
+        case PlayerState.playing :
+          return "playing";
+        case PlayerState.unknown:
+          return "unknown";
+      }
+    }
+    return null;
   }
 }
