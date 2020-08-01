@@ -31,8 +31,12 @@ dependencies:
 </pre>
 
 ## How to Use
-__사용될 유닛__
+__사용될 유닛__   
+<pre>
+<code>
 import 'package:bob_multi_player/bob_multi_player.dart';
+</code>
+</pre>
 
 __코드__
 <pre>
