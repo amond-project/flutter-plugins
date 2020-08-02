@@ -144,10 +144,14 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
       });
     }
     else {
-      isYouTubePlayer = true;
-      setState(() {
-        _player = createYoutubePlayer(src);
-      });
+      if (isYouTubePlayer) {
+        _controller.load(src);
+      } else {
+        isYouTubePlayer = true;
+        setState(() {
+          _player = createYoutubePlayer(src);
+        });
+      }
     }
   }
 

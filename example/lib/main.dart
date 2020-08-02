@@ -131,12 +131,9 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           FlatButton(
-            child: Text("Landscape Mode"),
+            child: Text("Youtube"),
             onPressed: () {
-              SystemChrome.setPreferredOrientations([
-                DeviceOrientation.landscapeLeft,
-                DeviceOrientation.landscapeRight,
-              ]);
+              playerObj.setSouce("6N9tRwLa3Rs");
             },
           ),
         ],
