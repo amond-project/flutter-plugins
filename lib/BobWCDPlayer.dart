@@ -233,8 +233,10 @@ class _BobWCDPlayerState extends State<BobWCDPlayer> {
   }
 
   void setSource(String src) {
-    this.src = src;
-    webView?.loadData(data: wcdPlayer);
+    if (src != this.src) {
+      this.src = src;
+      webView?.loadData(data: wcdPlayer);
+    }
   }
 
   void play() {

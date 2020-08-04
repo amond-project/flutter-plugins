@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },),
           ),
           FlatButton(
-            child: Text("We Can Do Play"),
+            child: Text("We Can Deo Play"),
             onPressed: () {
               playerObj.setSouce(
                   "http://play.wecandeo.com/video/v/?key=BOKNS9AQWrFXVTfipXQ6c1hsN1ZaB9TxKej10EZ2nAvJisRYkiixl6fbrKGKgfKFPwplFGipd7WMv3b27rE983vAVwieie");
@@ -119,21 +119,23 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           FlatButton(
+            child: Text("We Can Deo 2"),
+            onPressed: () {
+              //playerObj.stop();
+              playerObj.setSouce("http://play.wecandeo.com/video/v/?key=BOKNS9AQWrHtFFoZ3udAS4k647dHAtlqG4eh4nY4J3bKZbvfbASNbLKGKgfKFPwplFGipd7WMv3b27rE983vAVwieie");
+
+            },
+          ),
+          FlatButton(
+            child: Text("Youtube Play 2"),
+            onPressed: () {
+              playerObj.setSouce("6N9tRwLa3Rs");
+            },
+          ),
+          FlatButton(
             child: Text("Pause"),
             onPressed: () {
               playerObj.pause();
-            },
-          ),
-          FlatButton(
-            child: Text("Stop"),
-            onPressed: () {
-              playerObj.stop();
-            },
-          ),
-          FlatButton(
-            child: Text("Youtube"),
-            onPressed: () {
-              playerObj.setSouce("6N9tRwLa3Rs");
             },
           ),
         ],

@@ -130,18 +130,22 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
     //if (_controller.value.isPlaying) _controller.pause();
 
     if (src.startsWith('http')) {
-      isYouTubePlayer = false;
-      setState(() {
-        _player = BobWCDPlayer(playerObject: (obj){
-          _wcdPlayerObj = obj;
-          _wcdPlayerObj?.setSouce(src);
-        },
-          playerState: (value, param){
-            if (widget.playerState != null && mounted) {
-              widget.playerState(value, param);
-            }
-          },);
-      });
+      if (!isYouTubePlayer) {
+        _wcdPlayerObj?.setSouce(src);
+      } else {
+        isYouTubePlayer = false;
+        setState(() {
+          _player = BobWCDPlayer(playerObject: (obj) {
+            _wcdPlayerObj = obj;
+            _wcdPlayerObj?.setSouce(src);
+          },
+            playerState: (value, param) {
+              if (widget.playerState != null && mounted) {
+                widget.playerState(value, param);
+              }
+            },);
+        });
+      }
     }
     else {
       if (isYouTubePlayer) {
