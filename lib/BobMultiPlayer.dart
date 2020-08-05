@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import 'BobWCDPlayer.dart';
+import 'player_type.dart';
 
 class BobMultiPlayer extends StatefulWidget {
   final _BobMultiPlayerState _bobMultiPlayerState = _BobMultiPlayerState();
@@ -52,7 +53,7 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
 
   Widget _player;
 
-  bool isYouTubePlayer = false;
+  PlayerType _playerType = PlayerType.none;
 
   void listener() {
 //    if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
@@ -130,10 +131,10 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
     //if (_controller.value.isPlaying) _controller.pause();
 
     if (src.startsWith('http')) {
-      if (!isYouTubePlayer) {
+      if (_playerType == PlayerType.weCanDeo) {
         _wcdPlayerObj?.setSouce(src);
       } else {
-        isYouTubePlayer = false;
+        _playerType = PlayerType.weCanDeo;
         setState(() {
           _player = BobWCDPlayer(playerObject: (obj) {
             _wcdPlayerObj = obj;
@@ -148,10 +149,10 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
       }
     }
     else {
-      if (isYouTubePlayer) {
+      if (_playerType == PlayerType.youTube) {
         _controller.load(src);
       } else {
-        isYouTubePlayer = true;
+        _playerType = PlayerType.youTube;
         setState(() {
           _player = createYoutubePlayer(src);
         });
@@ -160,21 +161,21 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
   }
 
   void play() {
-    isYouTubePlayer?_controller?.play(): _wcdPlayerObj?.play();
+    _playerType == PlayerType.youTube?_controller?.play(): _wcdPlayerObj?.play();
   }
 
   void stop() {
-    isYouTubePlayer?_controller?.pause(): _wcdPlayerObj?.stop();
+    _playerType == PlayerType.youTube?_controller?.pause(): _wcdPlayerObj?.stop();
   }
 
   void pause() {
-    isYouTubePlayer?_controller?.pause():_wcdPlayerObj?.pause();
+    _playerType == PlayerType.youTube?_controller?.pause():_wcdPlayerObj?.pause();
   }
 
   //          Returns String
   //          – VALUE : idle , playing , pause , buffering
   Future<String> getState() async {
-    if (!isYouTubePlayer)
+    if (_playerType == PlayerType.weCanDeo)
       return await _wcdPlayerObj.getState();
     else {
       switch (_playerState) {

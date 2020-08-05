@@ -84,7 +84,7 @@ class _BobWCDPlayerState extends State<BobWCDPlayer> {
                 window.flutter_inappwebview.callHandler('PAUSE');
               });
               api.onEvent(smIframeEvent.BUFFERING , function(data){
-                window.flutter_inappwebview.callHandler('BUFFERING');
+                window.flutter_inappwebview.callHandler('BUFFERING', data);
               });
               api.onEvent(smIframeEvent.IDLE , function(){
                 window.flutter_inappwebview.callHandler('IDLE');
@@ -94,22 +94,22 @@ class _BobWCDPlayerState extends State<BobWCDPlayer> {
                 window.flutter_inappwebview.callHandler('COMPLETE');
               });
               api.onEvent(smIframeEvent.ERROR , function(data){
-                window.flutter_inappwebview.callHandler('ERROR');
+                window.flutter_inappwebview.callHandler('ERROR', data);
               });
               api.onEvent(smIframeEvent.VIDEO_RATE , function(data){
-                window.flutter_inappwebview.callHandler('VIDEO_RATE');
+                window.flutter_inappwebview.callHandler('VIDEO_RATE', data);
               });
               api.onEvent(smIframeEvent.VOLUME , function(data){
-                window.flutter_inappwebview.callHandler('VOLUME');
+                window.flutter_inappwebview.callHandler('VOLUME', data);
               });
               api.onEvent(smIframeEvent.SEEK , function(data){
-                window.flutter_inappwebview.callHandler('SEEK');
+                window.flutter_inappwebview.callHandler('SEEK', data);
               });
 //              api.onEvent(smIframeEvent.TIME , function(data){
 //                window.flutter_inappwebview.callHandler('TIME');
 //              });
               api.onEvent(smIframeEvent.FULLSCREEN , function(data){
-                window.flutter_inappwebview.callHandler('FULLSCREEN');
+                window.flutter_inappwebview.callHandler('FULLSCREEN', data);
               });
             }
             script.async = true
