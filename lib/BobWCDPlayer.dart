@@ -74,6 +74,7 @@ class _BobWCDPlayerState extends State<BobWCDPlayer> {
               console.log(smIframeEvent.PLAY);
               //api.setName('bobplayer'); //api.setName의 입력값과 iframe 태그의 name 값은 같아야 합니다.
               api.onEvent(smIframeEvent.PLAY , function(){
+                console.log('1111111111111111111111111111111111111111');
                 window.flutter_inappwebview.callHandler('PLAY');
               });
               api.onEvent(smIframeEvent.READY , function(){
@@ -84,6 +85,7 @@ class _BobWCDPlayerState extends State<BobWCDPlayer> {
                 window.flutter_inappwebview.callHandler('PAUSE');
               });
               api.onEvent(smIframeEvent.BUFFERING , function(data){
+                console.log('BUFFERING', data);
                 window.flutter_inappwebview.callHandler('BUFFERING');
               });
               api.onEvent(smIframeEvent.IDLE , function(){
@@ -103,13 +105,15 @@ class _BobWCDPlayerState extends State<BobWCDPlayer> {
                 window.flutter_inappwebview.callHandler('VOLUME');
               });
               api.onEvent(smIframeEvent.SEEK , function(data){
-                window.flutter_inappwebview.callHandler('SEEK');
+                console.log('SEEK', data);
+                window.flutter_inappwebview.callHandler('SEEK', data);
               });
 //              api.onEvent(smIframeEvent.TIME , function(data){
 //                window.flutter_inappwebview.callHandler('TIME');
 //              });
               api.onEvent(smIframeEvent.FULLSCREEN , function(data){
-                window.flutter_inappwebview.callHandler('FULLSCREEN');
+                console.log('FULLSCREEN', data);
+                window.flutter_inappwebview.callHandler('FULLSCREEN', data);
               });
             }
             script.async = true
@@ -202,6 +206,8 @@ class _BobWCDPlayerState extends State<BobWCDPlayer> {
           playerState('time', data);
         })
         ..addJavaScriptHandler(handlerName: 'FULLSCREEN', callback: (data){
+          print('FULLSCREENFULLSCREENFULLSCREENFULLSCREENFULLSCREENFULLSCREENFULLSCREENFULLSCREENFULLSCREENFULLSCREENFULLSCREENFULLSCREENFULLSCREEN');
+          print(data);
           fullScreen(data);
         });
         },
@@ -210,6 +216,9 @@ class _BobWCDPlayerState extends State<BobWCDPlayer> {
       onLoadStop: (InAppWebViewController controller, String url) async {
       },
       onProgressChanged: (InAppWebViewController controller, int progress) {
+      },
+      onConsoleMessage: (controller, consoleMessage) {
+        print("CONSOLE MESSAGE: " + consoleMessage.message);
       },
     );
   }
