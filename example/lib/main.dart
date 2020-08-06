@@ -55,6 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setEnabledSystemUIOverlays([]);
   }
 
   @override
@@ -67,79 +68,97 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
+  Widget bobPlayer() {
+    return BobMultiPlayer(playerObject: (obj) {
+      playerObj = obj;
+    },
+      playerState: (value, param) {
+        print("----" + value + "," + param.toString());
+      },
+    );
+  }
+
+  Widget body() {
+    return Column(
+      children: <Widget>[
+        AspectRatio(
+          aspectRatio: MediaQuery.of(context).orientation == Orientation.portrait ? 16 / 9 :
+                          MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height * 0.91),
+          child: bobPlayer()
+        ),
+        MediaQuery.of(context).orientation == Orientation.portrait ? buttons() : SizedBox.shrink(),
+      ],
+    );
+  }
+
+  Widget buttons() {
+    return Column(
+      children: <Widget>[
+        FlatButton(
+          child: Text("We Can Deo Play"),
+          onPressed: () {
+            playerObj.setSouce(
+                "http://play.wecandeo.com/video/v/?key=BOKNS9AQWrFXVTfipXQ6c1hsN1ZaB9TxKej10EZ2nAvJisRYkiixl6fbrKGKgfKFPwplFGipd7WMv3b27rE983vAVwieie");
+            //playerObj.setSouce("iLnmTe5Q2Qw");
+          },
+        ),
+        FlatButton(
+          child: Text("YouTube Play"),
+          onPressed: () {
+            playerObj.setSouce("RCtGi226ISY");
+            //playerObj.play();
+          },
+        ),
+        FlatButton(
+          child: Text("We Can Deo 2"),
+          onPressed: () {
+            //playerObj.stop();
+            playerObj.setSouce("http://play.wecandeo.com/video/v/?key=BOKNS9AQWrHtFFoZ3udAS4k647dHAtlqG4eh4nY4J3bKZbvfbASNbLKGKgfKFPwplFGipd7WMv3b27rE983vAVwieie");
+
+          },
+        ),
+        FlatButton(
+          child: Text("Youtube Play 2"),
+          onPressed: () {
+            playerObj.setSouce("6N9tRwLa3Rs");
+          },
+        ),
+        FlatButton(
+          child: Text("Pause"),
+          onPressed: () {
+            playerObj.pause();
+          },
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 12.0),
-          child: Image.asset(
-            'assets/ypf.png',
-            fit: BoxFit.fitWidth,
-          ),
-        ),
-        title: const Text(
-          'Bob WECANDO Player Flutter',
-          style: TextStyle(color: Colors.white),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.video_library),
-            onPressed: () {
-              SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        children: <Widget>[
-          AspectRatio(
-            aspectRatio: 320 / 240,
-            child: BobMultiPlayer(playerObject: (obj) {
-              playerObj = obj;
-            },
-              playerState: (value, param) {
-                print("----" + value + "," + param.toString());
-              },),
-          ),
-          FlatButton(
-            child: Text("We Can Deo Play"),
-            onPressed: () {
-              playerObj.setSouce(
-                  "http://play.wecandeo.com/video/v/?key=BOKNS9AQWrFXVTfipXQ6c1hsN1ZaB9TxKej10EZ2nAvJisRYkiixl6fbrKGKgfKFPwplFGipd7WMv3b27rE983vAVwieie");
-              //playerObj.setSouce("iLnmTe5Q2Qw");
-            },
-          ),
-          FlatButton(
-            child: Text("YouTube Play"),
-            onPressed: () {
-              playerObj.setSouce("RCtGi226ISY");
-              //playerObj.play();
-            },
-          ),
-          FlatButton(
-            child: Text("We Can Deo 2"),
-            onPressed: () {
-              //playerObj.stop();
-              playerObj.setSouce("http://play.wecandeo.com/video/v/?key=BOKNS9AQWrHtFFoZ3udAS4k647dHAtlqG4eh4nY4J3bKZbvfbASNbLKGKgfKFPwplFGipd7WMv3b27rE983vAVwieie");
-
-            },
-          ),
-          FlatButton(
-            child: Text("Youtube Play 2"),
-            onPressed: () {
-              playerObj.setSouce("6N9tRwLa3Rs");
-            },
-          ),
-          FlatButton(
-            child: Text("Pause"),
-            onPressed: () {
-              playerObj.pause();
-            },
-          ),
-        ],
-      ),
+//      appBar: AppBar(
+//        leading: Padding(
+//          padding: const EdgeInsets.only(left: 12.0),
+//          child: Image.asset(
+//            'assets/ypf.png',
+//            fit: BoxFit.fitWidth,
+//          ),
+//        ),
+//        title: const Text(
+//          'Bob WECANDO Player Flutter',
+//          style: TextStyle(color: Colors.white),
+//        ),
+//        actions: [
+//          IconButton(
+//            icon: const Icon(Icons.video_library),
+//            onPressed: () {
+//              SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+//            },
+//          ),
+//        ],
+//      ),
+      body: body(),
     );
   }
 

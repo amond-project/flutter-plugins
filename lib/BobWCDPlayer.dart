@@ -221,7 +221,7 @@ class _BobWCDPlayerState extends State<BobWCDPlayer> {
   }
 
   void fullScreen(List<dynamic> param) {
-    print(param.toString());
+    print(param);
     if (param[0]) {
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.landscapeLeft,
