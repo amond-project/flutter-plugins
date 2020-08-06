@@ -81,9 +81,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget body() {
     return Column(
       children: <Widget>[
+        MediaQuery.of(context).orientation == Orientation.portrait ? SizedBox(height: MediaQuery.of(context).viewPadding.top,) : SizedBox.shrink(),
         AspectRatio(
           aspectRatio: MediaQuery.of(context).orientation == Orientation.portrait ? 16 / 9 :
-                          MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height * 0.91),
+                          MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height - MediaQuery.of(context).viewPadding.top),
           child: bobPlayer()
         ),
         MediaQuery.of(context).orientation == Orientation.portrait ? buttons() : SizedBox.shrink(),
