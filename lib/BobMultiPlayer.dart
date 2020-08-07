@@ -178,24 +178,27 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
   //          Returns String
   //          – VALUE : idle , playing , pause , buffering
   Future<String> getState() async {
-    if (_playerType == PlayerType.weCanDeo)
-      return await _wcdPlayerObj.getState();
-    else {
-      switch (_playerState) {
-        case PlayerState.cued :
-          return "ready";
-        case PlayerState.unStarted :
-          return "ready";
-        case PlayerState.buffering :
-          return "buffering";
-        case PlayerState.ended :
-          return "complete";
-        case PlayerState.paused :
-          return "pause";
-        case PlayerState.playing :
-          return "playing";
-        case PlayerState.unknown:
-          return "unknown";
+    if (mounted) {
+      if (_playerType == PlayerType.weCanDeo)
+        return await _wcdPlayerObj.getState();
+      else {
+        print(_playerState);
+        switch (_playerState) {
+          case PlayerState.cued :
+            return "ready";
+          case PlayerState.unStarted :
+            return "ready";
+          case PlayerState.buffering :
+            return "buffering";
+          case PlayerState.ended :
+            return "complete";
+          case PlayerState.paused :
+            return "pause";
+          case PlayerState.playing :
+            return "playing";
+          case PlayerState.unknown:
+            return "unknown";
+        }
       }
     }
     return null;
