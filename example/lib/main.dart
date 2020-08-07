@@ -51,11 +51,15 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   BobMultiPlayer playerObj;
-
+  double _yPosition = 0;
+  double _width;
   @override
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIOverlays([]);
+    Future.delayed(Duration.zero, () {
+      _width = MediaQuery.of(context).size.width;
+    });
   }
 
   @override
@@ -69,9 +73,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget bobPlayer() {
-    return BobMultiPlayer(playerObject: (obj) {
-      playerObj = obj;
-    },
+    return BobMultiPlayer(
+      playerObject: (obj) {
+        playerObj = obj;
+      },
       playerState: (value, param) {
         print("----" + value + "," + param.toString());
       },
@@ -79,15 +84,35 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget body() {
-    return Column(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        MediaQuery.of(context).orientation == Orientation.portrait ? SizedBox(height: MediaQuery.of(context).viewPadding.top,) : SizedBox.shrink(),
-        AspectRatio(
-            aspectRatio: MediaQuery.of(context).orientation == Orientation.portrait ? 16 / 9 :
-            MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height - MediaQuery.of(context).viewPadding.top),
-            child: bobPlayer()
+        Container(
+          width: _width,
+          height: 900,
+          child: Column(
+            children: <Widget>[
+              MediaQuery.of(context).orientation == Orientation.portrait
+                  ? SizedBox(
+                      height: MediaQuery.of(context).viewPadding.top,
+                    )
+                  : SizedBox.shrink(),
+              AspectRatio(
+                  aspectRatio: MediaQuery.of(context).orientation == Orientation.portrait
+                      ? 16 / 9
+                      : MediaQuery.of(context).size.width /
+                          (MediaQuery.of(context).size.height - MediaQuery.of(context).viewPadding.top),
+                  child: bobPlayer()),
+              MediaQuery.of(context).orientation == Orientation.portrait ? buttons() : SizedBox.shrink(),
+            ],
+          ),
         ),
-        MediaQuery.of(context).orientation == Orientation.portrait ? buttons() : SizedBox.shrink(),
+        Expanded(
+          child: Container(
+            height: 150,
+            color: Colors.white,
+          ),
+        )
       ],
     );
   }
@@ -114,8 +139,8 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Text("We Can Deo 2"),
           onPressed: () {
             //playerObj.stop();
-            playerObj.setSouce("http://play.wecandeo.com/video/v/?key=BOKNS9AQWrHtFFoZ3udAS4k647dHAtlqG4eh4nY4J3bKZbvfbASNbLKGKgfKFPwplFGipd7WMv3b27rE983vAVwieie");
-
+            playerObj.setSouce(
+                "http://play.wecandeo.com/video/v/?key=BOKNS9AQWrHtFFoZ3udAS4k647dHAtlqG4eh4nY4J3bKZbvfbASNbLKGKgfKFPwplFGipd7WMv3b27rE983vAVwieie");
           },
         ),
         FlatButton(
@@ -159,7 +184,42 @@ class _MyHomePageState extends State<MyHomePage> {
 //          ),
 //        ],
 //      ),
-      body: body(),
+      body: Stack(
+        overflow: Overflow.visible,
+        children: <Widget>[
+          Positioned(
+            top: _yPosition,
+            width: MediaQuery.of(context).size.width,
+            child: GestureDetector(
+              onPanStart: (dragStartDetail) {
+
+              },
+              onPanUpdate: (dragUpdateDetail) {
+                setState(() {
+                  _yPosition += dragUpdateDetail.delta.dy;
+                  double yper = _yPosition / MediaQuery.of(context).size.height;
+                  _width = MediaQuery.of(context).size.width - (MediaQuery.of(context).size.width - 150) * yper;
+                });
+              },
+              onPanEnd: (dragEndDetail) {
+                print(dragEndDetail.velocity);
+                if (MediaQuery.of(context).size.height / 3 < _yPosition) {
+                  setState(() {
+                    _width = 150;
+                    _yPosition = MediaQuery.of(context).size.height - 150;
+                  });
+                } else {
+                  setState(() {
+                    _width = MediaQuery.of(context).size.width;
+                    _yPosition = 0;
+                  });
+                }
+              },
+              child: body(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
