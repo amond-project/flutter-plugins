@@ -93,7 +93,7 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
       flags: const YoutubePlayerFlags(
         mute: false,
         autoPlay: true,
-        disableDragSeek: false,
+        disableDragSeek: true,
         loop: false,
         isLive: false,
         forceHD: false,

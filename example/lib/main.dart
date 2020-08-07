@@ -48,11 +48,16 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   BobMultiPlayer playerObj;
   double _yPosition = 0;
-  double _width;
+  double _width = 200;
+
+  AnimationController _controller;
+  Tween<double> _tween;
+  Animation<double> _moveAnim;
+
   @override
   void initState() {
     super.initState();
@@ -60,6 +65,37 @@ class _MyHomePageState extends State<MyHomePage> {
     Future.delayed(Duration.zero, () {
       _width = MediaQuery.of(context).size.width;
     });
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 100),
+    );
+
+    _tween = Tween(
+      begin: _yPosition,
+      end: 0.0,
+    );
+
+    Animation curve = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+
+    _moveAnim = _tween.animate(curve)
+      ..addListener(() {
+        setState(() {
+          _yPosition = _moveAnim.value;
+          double yper = _yPosition / MediaQuery.of(context).size.height;
+          _width = MediaQuery.of(context).size.width - (MediaQuery.of(context).size.width - 150) * yper;
+        });
+      })
+      ..addStatusListener((animationStatus) {
+
+        if (animationStatus == AnimationStatus.completed) {
+          setState(() {
+            print('completed');
+          });
+        }
+      });
+
+
   }
 
   @override
@@ -83,34 +119,46 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  double _getHeightRatio() {
+    return
+     MediaQuery.of(context).orientation == Orientation.portrait
+        ? 16 / 9
+        : MediaQuery.of(context).size.width /
+        (MediaQuery.of(context).size.height - MediaQuery.of(context).viewPadding.top);
+  }
+
   Widget body() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Container(
-          width: _width,
-          height: 900,
-          child: Column(
-            children: <Widget>[
-              MediaQuery.of(context).orientation == Orientation.portrait
-                  ? SizedBox(
-                      height: MediaQuery.of(context).viewPadding.top,
-                    )
-                  : SizedBox.shrink(),
-              AspectRatio(
-                  aspectRatio: MediaQuery.of(context).orientation == Orientation.portrait
-                      ? 16 / 9
-                      : MediaQuery.of(context).size.width /
-                          (MediaQuery.of(context).size.height - MediaQuery.of(context).viewPadding.top),
-                  child: bobPlayer()),
-              MediaQuery.of(context).orientation == Orientation.portrait ? buttons() : SizedBox.shrink(),
-            ],
-          ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            MediaQuery.of(context).orientation == Orientation.portrait &&
+                _width == MediaQuery.of(context).size.width
+                ? SizedBox(
+                    height: MediaQuery.of(context).viewPadding.top,
+                  )
+                : SizedBox.shrink(),
+            Container(
+              width: _width,
+              height: _width / _getHeightRatio(),
+              child: Transform.scale(
+                alignment: Alignment.topLeft,
+                scale: 1.0, //_width / MediaQuery.of(context).size.width ,
+                child: bobPlayer(),
+              ),
+            ),
+
+            MediaQuery.of(context).orientation == Orientation.portrait &&
+              _width == MediaQuery.of(context).size.width
+                ? buttons() : SizedBox.shrink(),
+          ],
         ),
         Expanded(
           child: Container(
-            height: 150,
-            color: Colors.white,
+            height: _width / _getHeightRatio(),
+            color: Colors.grey,
           ),
         )
       ],
@@ -159,6 +207,20 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _toTop() {
+    _tween.begin = _yPosition;
+    _tween.end = 0;
+    _controller.reset();
+    _controller.forward();
+  }
+
+  void _toBottom() {
+    _tween.begin = _yPosition;
+    _tween.end = MediaQuery.of(context).size.height - 120;
+    _controller.reset();
+    _controller.forward();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -195,6 +257,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
               },
               onPanUpdate: (dragUpdateDetail) {
+                print(_yPosition);
                 setState(() {
                   _yPosition += dragUpdateDetail.delta.dy;
                   double yper = _yPosition / MediaQuery.of(context).size.height;
@@ -203,16 +266,19 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               onPanEnd: (dragEndDetail) {
                 print(dragEndDetail.velocity);
-                if (MediaQuery.of(context).size.height / 3 < _yPosition) {
-                  setState(() {
-                    _width = 150;
-                    _yPosition = MediaQuery.of(context).size.height - 150;
-                  });
+                if (dragEndDetail.velocity.pixelsPerSecond.dy < - 1000) {
+                  _toTop();
+                } else if (dragEndDetail.velocity.pixelsPerSecond.dy > 1000) {
+                  _toBottom();
                 } else {
-                  setState(() {
-                    _width = MediaQuery.of(context).size.width;
-                    _yPosition = 0;
-                  });
+                  if (MediaQuery
+                      .of(context)
+                      .size
+                      .height / 3 < _yPosition) {
+                    _toBottom();
+                  } else {
+                    _toTop();
+                  }
                 }
               },
               child: body(),
