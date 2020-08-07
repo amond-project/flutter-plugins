@@ -109,7 +109,10 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
         _isPlayerReady = true;
       },
       onEnded: (data) {
-
+        _playerType = PlayerType.none;
+        setState(() {
+          _player = Container(color: Colors.black,);
+        });
       },
     );
   }
