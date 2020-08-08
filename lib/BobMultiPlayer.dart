@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import 'BobWCDPlayer.dart';
@@ -111,6 +112,7 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
       onEnded: (data) {
         _playerType = PlayerType.none;
         setState(() {
+           SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
           _player = Container(color: Colors.black,);
         });
       },

@@ -184,6 +184,7 @@ class _BobWCDPlayerState extends State<BobWCDPlayer> {
           playerState('idle', null);
         })
         ..addJavaScriptHandler(handlerName: 'COMPLETE', callback: (_){
+          SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
           playerState('complete', null);
         })
         ..addJavaScriptHandler(handlerName: 'ERROR', callback: (data){

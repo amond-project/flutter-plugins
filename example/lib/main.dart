@@ -141,13 +141,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   )
                 : SizedBox.shrink(),
             Container(
-              width: _width,
-              height: _width / _getHeightRatio(),
-              child: Transform.scale(
-                alignment: Alignment.topLeft,
-                scale: 1.0, //_width / MediaQuery.of(context).size.width ,
-                child: bobPlayer(),
-              ),
+              width: MediaQuery.of(context).orientation == Orientation.portrait ? _width : MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).orientation == Orientation.portrait ? _width / _getHeightRatio() : MediaQuery.of(context).size.height - MediaQuery.of(context).viewPadding.top,
+              child: bobPlayer(),
             ),
 
             MediaQuery.of(context).orientation == Orientation.portrait &&
@@ -257,27 +253,38 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
               },
               onPanUpdate: (dragUpdateDetail) {
-                print(_yPosition);
-                setState(() {
-                  _yPosition += dragUpdateDetail.delta.dy;
-                  double yper = _yPosition / MediaQuery.of(context).size.height;
-                  _width = MediaQuery.of(context).size.width - (MediaQuery.of(context).size.width - 150) * yper;
-                });
+                if (MediaQuery.of(context).orientation == Orientation.portrait) {
+                  setState(() {
+                    _yPosition += dragUpdateDetail.delta.dy;
+                    double yper = _yPosition / MediaQuery
+                        .of(context)
+                        .size
+                        .height;
+                    _width = MediaQuery
+                        .of(context)
+                        .size
+                        .width - (MediaQuery
+                        .of(context)
+                        .size
+                        .width - 150) * yper;
+                  });
+                }
               },
               onPanEnd: (dragEndDetail) {
-                print(dragEndDetail.velocity);
-                if (dragEndDetail.velocity.pixelsPerSecond.dy < - 1000) {
-                  _toTop();
-                } else if (dragEndDetail.velocity.pixelsPerSecond.dy > 1000) {
-                  _toBottom();
-                } else {
-                  if (MediaQuery
-                      .of(context)
-                      .size
-                      .height / 3 < _yPosition) {
+                if (MediaQuery.of(context).orientation == Orientation.portrait) {
+                  if (dragEndDetail.velocity.pixelsPerSecond.dy < -1000) {
+                    _toTop();
+                  } else if (dragEndDetail.velocity.pixelsPerSecond.dy > 1000) {
                     _toBottom();
                   } else {
-                    _toTop();
+                    if (MediaQuery
+                        .of(context)
+                        .size
+                        .height / 3 < _yPosition) {
+                      _toBottom();
+                    } else {
+                      _toTop();
+                    }
                   }
                 }
               },
