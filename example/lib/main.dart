@@ -256,17 +256,21 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 if (MediaQuery.of(context).orientation == Orientation.portrait) {
                   setState(() {
                     _yPosition += dragUpdateDetail.delta.dy;
-                    double yper = _yPosition / MediaQuery
-                        .of(context)
-                        .size
-                        .height;
-                    _width = MediaQuery
-                        .of(context)
-                        .size
-                        .width - (MediaQuery
-                        .of(context)
-                        .size
-                        .width - 150) * yper;
+                    if (_yPosition > 0) {
+                      double yper = _yPosition / MediaQuery
+                          .of(context)
+                          .size
+                          .height;
+                      _width = MediaQuery
+                          .of(context)
+                          .size
+                          .width - (MediaQuery
+                          .of(context)
+                          .size
+                          .width - 150) * yper;
+                    } else {
+                      _yPosition = 0;
+                    }
                   });
                 }
               },
