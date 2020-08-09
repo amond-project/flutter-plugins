@@ -76,26 +76,25 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       end: 0.0,
     );
 
-    Animation curve = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+    Animation curve =
+        CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
 
     _moveAnim = _tween.animate(curve)
       ..addListener(() {
         setState(() {
           _yPosition = _moveAnim.value;
           double yper = _yPosition / MediaQuery.of(context).size.height;
-          _width = MediaQuery.of(context).size.width - (MediaQuery.of(context).size.width - 150) * yper;
+          _width = MediaQuery.of(context).size.width -
+              (MediaQuery.of(context).size.width - 150) * yper;
         });
       })
       ..addStatusListener((animationStatus) {
-
         if (animationStatus == AnimationStatus.completed) {
           setState(() {
             print('completed');
           });
         }
       });
-
-
   }
 
   @override
@@ -116,15 +115,26 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       playerState: (value, param) {
         print("----" + value + "," + param.toString());
       },
+      initScreen: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.width / _getHeightRatio(),
+        color: Colors.black,
+        child: Center(
+          child: Text(
+            "플레이어 대기 중...\n이곳에는 이미지가 올 수도 있고~ 원하는것 다 올려보셈!",
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ),
     );
   }
 
   double _getHeightRatio() {
-    return
-     MediaQuery.of(context).orientation == Orientation.portrait
+    return MediaQuery.of(context).orientation == Orientation.portrait
         ? 16 / 9
         : MediaQuery.of(context).size.width /
-        (MediaQuery.of(context).size.height - MediaQuery.of(context).viewPadding.top);
+            (MediaQuery.of(context).size.height -
+                MediaQuery.of(context).viewPadding.top);
   }
 
   Widget body() {
@@ -135,20 +145,25 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             MediaQuery.of(context).orientation == Orientation.portrait &&
-                _width == MediaQuery.of(context).size.width
+                    _width == MediaQuery.of(context).size.width
                 ? SizedBox(
                     height: MediaQuery.of(context).viewPadding.top,
                   )
                 : SizedBox.shrink(),
             Container(
-              width: MediaQuery.of(context).orientation == Orientation.portrait ? _width : MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).orientation == Orientation.portrait ? _width / _getHeightRatio() : MediaQuery.of(context).size.height - MediaQuery.of(context).viewPadding.top,
+              width: MediaQuery.of(context).orientation == Orientation.portrait
+                  ? _width
+                  : MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).orientation == Orientation.portrait
+                  ? _width / _getHeightRatio()
+                  : MediaQuery.of(context).size.height -
+                      MediaQuery.of(context).viewPadding.top,
               child: bobPlayer(),
             ),
-
             MediaQuery.of(context).orientation == Orientation.portrait &&
-              _width == MediaQuery.of(context).size.width
-                ? buttons() : SizedBox.shrink(),
+                    _width == MediaQuery.of(context).size.width
+                ? buttons()
+                : SizedBox.shrink(),
           ],
         ),
         Expanded(
@@ -249,25 +264,17 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             top: _yPosition,
             width: MediaQuery.of(context).size.width,
             child: GestureDetector(
-              onPanStart: (dragStartDetail) {
-
-              },
+              onPanStart: (dragStartDetail) {},
               onPanUpdate: (dragUpdateDetail) {
-                if (MediaQuery.of(context).orientation == Orientation.portrait) {
+                if (MediaQuery.of(context).orientation ==
+                    Orientation.portrait) {
                   setState(() {
                     _yPosition += dragUpdateDetail.delta.dy;
                     if (_yPosition > 0) {
-                      double yper = _yPosition / MediaQuery
-                          .of(context)
-                          .size
-                          .height;
-                      _width = MediaQuery
-                          .of(context)
-                          .size
-                          .width - (MediaQuery
-                          .of(context)
-                          .size
-                          .width - 150) * yper;
+                      double yper =
+                          _yPosition / MediaQuery.of(context).size.height;
+                      _width = MediaQuery.of(context).size.width -
+                          (MediaQuery.of(context).size.width - 150) * yper;
                     } else {
                       _yPosition = 0;
                     }
@@ -275,16 +282,14 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 }
               },
               onPanEnd: (dragEndDetail) {
-                if (MediaQuery.of(context).orientation == Orientation.portrait) {
+                if (MediaQuery.of(context).orientation ==
+                    Orientation.portrait) {
                   if (dragEndDetail.velocity.pixelsPerSecond.dy < -1000) {
                     _toTop();
                   } else if (dragEndDetail.velocity.pixelsPerSecond.dy > 1000) {
                     _toBottom();
                   } else {
-                    if (MediaQuery
-                        .of(context)
-                        .size
-                        .height / 3 < _yPosition) {
+                    if (MediaQuery.of(context).size.height / 3 < _yPosition) {
                       _toBottom();
                     } else {
                       _toTop();

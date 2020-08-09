@@ -11,8 +11,8 @@ class BobMultiPlayer extends StatefulWidget {
 
   final Function(BobMultiPlayer playerObj) playerObject;
   final Function(String playerState, List<dynamic> param) playerState;
-
-  BobMultiPlayer({this.playerObject, this.playerState});
+  final Widget initScreen;
+  BobMultiPlayer({this.playerObject, this.playerState, this.initScreen});
 
   @override
   _BobMultiPlayerState createState() {
@@ -113,7 +113,7 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
         _playerType = PlayerType.none;
         setState(() {
            SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-          _player = Container(color: Colors.black,);
+          _player = widget.initScreen==null ? Container(color: Colors.black,) : widget.initScreen;
         });
       },
     );
@@ -122,7 +122,7 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
   @override
   void initState() {
     super.initState();
-    _player = Container(color: Colors.black,);
+    _player = widget.initScreen==null ? Container(color: Colors.black,) : widget.initScreen;
   }
 
   @override
@@ -148,6 +148,11 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
             playerState: (value, param) {
               if (widget.playerState != null && mounted) {
                 widget.playerState(value, param);
+              }
+              if (value=="complete") {
+                setState(() {
+                  _player = widget.initScreen==null ? Container(color: Colors.black,) : widget.initScreen;
+                });
               }
             },);
         });
