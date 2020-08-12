@@ -182,7 +182,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         FlatButton(
           child: Text("We Can Deo Play"),
           onPressed: () {
-            playerObj.setSouce(
+            playerObj.setSource(
                 "http://play.wecandeo.com/video/v/?key=BOKNS9AQWrFXVTfipXQ6c1hsN1ZaB9TxKej10EZ2nAvJisRYkiixl6fbrKGKgfKFPwplFGipd7WMv3b27rE983vAVwieie");
             //playerObj.setSouce("iLnmTe5Q2Qw");
           },
@@ -190,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         FlatButton(
           child: Text("YouTube Play"),
           onPressed: () {
-            playerObj.setSouce("bSsXw2Fg5dw");
+            playerObj.setSource("bSsXw2Fg5dw");
             //playerObj.play();
           },
         ),
@@ -198,14 +198,14 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           child: Text("We Can Deo 2"),
           onPressed: () {
             //playerObj.stop();
-            playerObj.setSouce(
+            playerObj.setSource(
                 "http://play.wecandeo.com/video/v/?key=BOKNS9AQWrHtFFoZ3udAS4k647dHAtlqG4eh4nY4J3bKZbvfbASNbLKGKgfKFPwplFGipd7WMv3b27rE983vAVwieie");
           },
         ),
         FlatButton(
           child: Text("Youtube Play 2"),
           onPressed: () {
-            playerObj.setSouce("6N9tRwLa3Rs");
+            playerObj.setSource("6N9tRwLa3Rs");
           },
         ),
         FlatButton(
