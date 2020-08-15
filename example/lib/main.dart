@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -129,6 +130,38 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     );
   }
 
+  Widget scaledPlayer() {
+    return Stack(
+      overflow: Overflow.clip,
+      children: <Widget>[
+        Container( //이곳이 작아졌을 때 들어갈 컨텐츠 넣을 곳.
+          width: MediaQuery.of(context).size.width,
+          height: _getScaledHeight(),
+          color: Colors.amber,
+        ),
+        Transform.scale(
+          alignment: Alignment.topLeft,
+          scale: _getScale(),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: bobPlayer(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  double _getScale() {
+    return 1 - (_yPosition / (MediaQuery.of(context).size.height + 300));
+  }
+
+  double _getScaledHeight() {
+    return MediaQuery.of(context).size.width / _getHeightRatio() * _getScale();
+  }
+
   double _getHeightRatio() {
     return MediaQuery.of(context).orientation == Orientation.portrait
         ? 16 / 9
@@ -150,16 +183,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     height: MediaQuery.of(context).viewPadding.top,
                   )
                 : SizedBox.shrink(),
-            Container(
-              width: MediaQuery.of(context).orientation == Orientation.portrait
-                  ? _width
-                  : MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).orientation == Orientation.portrait
-                  ? _width / _getHeightRatio()
-                  : MediaQuery.of(context).size.height -
-                      MediaQuery.of(context).viewPadding.top,
-              child: bobPlayer(),
-            ),
+            scaledPlayer(),
             MediaQuery.of(context).orientation == Orientation.portrait &&
                     _width == MediaQuery.of(context).size.width
                 ? buttons()
@@ -227,7 +251,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   void _toBottom() {
     _tween.begin = _yPosition;
-    _tween.end = MediaQuery.of(context).size.height - 120;
+    _tween.end = MediaQuery.of(context).size.height - 86;
     _controller.reset();
     _controller.forward();
   }
