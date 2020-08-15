@@ -69,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 100),
+      duration: Duration(milliseconds: 250),
     );
 
     _tween = Tween(
@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     );
 
     Animation curve =
-        CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+        CurvedAnimation(parent: _controller, curve: Curves.easeOutBack);
 
     _moveAnim = _tween.animate(curve)
       ..addListener(() {
@@ -313,7 +313,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   } else if (dragEndDetail.velocity.pixelsPerSecond.dy > 1000) {
                     _toBottom();
                   } else {
-                    if (MediaQuery.of(context).size.height / 3 < _yPosition) {
+                    if (MediaQuery.of(context).size.height / 2.5 < _yPosition) {
                       _toBottom();
                     } else {
                       _toTop();
