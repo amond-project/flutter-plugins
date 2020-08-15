@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import 'BobPlyrPlayer.dart';
 import 'BobWCDPlayer.dart';
 import 'BobYouTubePlayer.dart';
 import 'player_type.dart';
@@ -48,77 +49,13 @@ class BobMultiPlayer extends StatefulWidget {
 class _BobMultiPlayerState extends State<BobMultiPlayer> {
   bool _isPlayerReady = false;
   BobWCDPlayer _wcdPlayerObj;
-  BobYouTubePlayer _bobYouTubePlayerObj;
+  BobPlyrPlayer _bobYouTubePlayerObj;
 
   PlayerState _playerState;
 
   Widget _player;
 
   PlayerType _playerType = PlayerType.none;
-
-//  void listener() {
-////    if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
-////        _playerState = _controller.value.playerState;
-////        _videoMetaData = _controller.metadata;
-////    }
-//
-//    if (widget.playerState != null && mounted) {
-//      if (_playerState != _controller.value.playerState)
-//        switch (_controller.value.playerState) {
-//          case PlayerState.cued :
-//            widget.playerState("ready", null);
-//            break;
-//          case PlayerState.unStarted :
-//            widget.playerState("ready", null);
-//            break;
-//          case PlayerState.buffering :
-//            widget.playerState("buffering", null);
-//            break;
-//          case PlayerState.ended :
-//            widget.playerState("complete", null);
-//            break;
-//          case PlayerState.paused :
-//            widget.playerState("pause", null);
-//            break;
-//          case PlayerState.playing :
-//            widget.playerState("play", null);
-//            break;
-//        }
-//    }
-//    _playerState = _controller.value.playerState;
-//  }
-
-//  YoutubePlayer createYoutubePlayer(String vid) {
-//    _controller = YoutubePlayerController(
-//      initialVideoId: vid,
-//      flags: const YoutubePlayerFlags(
-//        mute: false,
-//        autoPlay: true,
-//        disableDragSeek: true,
-//        loop: false,
-//        isLive: false,
-//        forceHD: false,
-//        enableCaption: true,
-//      ),
-//    )..addListener(listener);
-//
-//    return YoutubePlayer(
-//      controller: _controller,
-//      showVideoProgressIndicator: true,
-//      progressIndicatorColor: Colors.blueAccent,
-//      onReady: () {
-//        _isPlayerReady = true;
-//      },
-//      onEnded: (data) {
-//        _playerType = PlayerType.none;
-//        setState(() {
-//           SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-//          _player = widget.initScreen==null ? Container(color: Colors.black,) : widget.initScreen;
-//        });
-//      },
-//    );
-//  }
-
 
   @override
   void initState() {
@@ -150,11 +87,6 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
               if (widget.playerState != null && mounted) {
                 widget.playerState(value, param);
               }
-//              if (value=="complete") {
-//                setState(() {
-//                  _player = widget.initScreen==null ? Container(color: Colors.black,) : widget.initScreen;
-//                });
-//              }
             },);
         });
       }
@@ -165,7 +97,7 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
       } else {
         _playerType = PlayerType.youTube;
         setState(() {
-          _player = BobYouTubePlayer(
+          _player = BobPlyrPlayer(
             initVid: src,
             playerObject: (obj) {
               _bobYouTubePlayerObj = obj;
@@ -174,16 +106,8 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
               if (widget.playerState != null && mounted) {
                 widget.playerState(value, param);
               }
-//              if (value=="complete") {
-//                setState(() {
-//                  _player = widget.initScreen==null ? Container(color: Colors.black,) : widget.initScreen;
-//                });
-//              }
             },
             onDataLoaded:(){
-              //다시 한번 소스 설정을 안하면 풀 스크린 버튼이 안 먹는다?? 유튜브 꼬져!
-              _bobYouTubePlayerObj.setSource(src);
-              _bobYouTubePlayerObj.play();
             },
           );
         });
