@@ -3,18 +3,21 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class BobWCDPlayer extends StatefulWidget {
-  final _BobWCDPlayerState bobWCDPlayerState = _BobWCDPlayerState();
+  _BobWCDPlayerState bobWCDPlayerState;
 
   final Function(BobWCDPlayer playerObj) playerObject;
   final Function(String playerState, List<dynamic> param) playerState;
+  final String initVid;
 
-  BobWCDPlayer({this.playerObject, this.playerState});
+  BobWCDPlayer({this.playerObject, this.playerState, this.initVid});
 
   @override
   _BobWCDPlayerState createState() {
     if (playerObject != null) {
       playerObject(this);
     }
+
+    bobWCDPlayerState = _BobWCDPlayerState(initVid);
     return bobWCDPlayerState;
   }
 
@@ -41,7 +44,11 @@ class BobWCDPlayer extends StatefulWidget {
 
 class _BobWCDPlayerState extends State<BobWCDPlayer> {
   InAppWebViewController webView;
-  String src = "";
+  String src;
+
+  _BobWCDPlayerState(String initVid) {
+    initVid != null ? src = initVid : src = "";
+  }
 
   String get wcdPlayer =>
       ''''<!DOCTYPE html>

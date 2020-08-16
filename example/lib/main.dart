@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
@@ -53,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   BobMultiPlayer playerObj;
   double _yPosition = 0;
-  double _width = 200;
+  double _width = 0;
 
   AnimationController _controller;
   Tween<double> _tween;
@@ -63,7 +64,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIOverlays([]);
+
     Future.delayed(Duration.zero, () {
+      _width = MediaQuery.of(context).size.width;
+    });
+
+    //위가 안 먹을 경우가 있어서 한번 더~, 위가 먹으면 바로 위에 패딩이 먹은 상태로 뜨기 때문에 위를 없애지는 않았다~
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       _width = MediaQuery.of(context).size.width;
     });
 

@@ -141,10 +141,11 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
       } else {
         _playerType = PlayerType.weCanDeo;
         setState(() {
-          _player = BobWCDPlayer(playerObject: (obj) {
+          _player = BobWCDPlayer(
+            initVid: src,
+            playerObject: (obj) {
             _wcdPlayerObj = obj;
-            _wcdPlayerObj?.setSouce(src);
-          },
+            },
             playerState: (value, param) {
               if (widget.playerState != null && mounted) {
                 widget.playerState(value, param);
