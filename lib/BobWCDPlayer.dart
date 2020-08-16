@@ -63,6 +63,14 @@ class _BobWCDPlayerState extends State<BobWCDPlayer> {
           </head>
           <body>
           <script src="http://play.wecandeo.com/html/utils/iframeAPI.js"></script>
+          <iframe id='bobplayer'
+            style="margin-top: -19px;"
+            width="100%" height="100%" 
+            src="$src&auto=true" 
+            frameborder="0" 
+            allowfullscreen 
+            allow="autoplay;fullscreen;">
+           </iframe>
           <script>
           var api;
           window.onload = function(){
@@ -137,13 +145,6 @@ class _BobWCDPlayerState extends State<BobWCDPlayer> {
           }
           
           </script>
-          <iframe id='bobplayer'
-            width="100%" height="94%" 
-            src="$src&auto=true" 
-            frameborder="0" 
-            allowfullscreen 
-            allow="autoplay;fullscreen;">
-           </iframe>
           </body>
           </html>''';
   @override
