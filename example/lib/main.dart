@@ -260,7 +260,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   void _toBottom() {
     _tween.begin = _yPosition;
-    _tween.end = MediaQuery.of(context).size.height - 86;
+    _tween.end = MediaQuery.of(context).size.height - 86 - MediaQuery.of(context).viewPadding.bottom;
     _controller.reset();
     _controller.forward();
   }
