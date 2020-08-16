@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -46,6 +48,13 @@ class BobWCDPlayer extends StatefulWidget {
 class _BobWCDPlayerState extends State<BobWCDPlayer> {
   InAppWebViewController webView;
   String src = "";
+  String margin = "-19px";
+
+  _BobWCDPlayerState() {
+    if(Platform.isIOS) {
+      margin = "-20px";
+    }
+  }
 
   String get wcdPlayer =>
       ''''<!DOCTYPE html>
@@ -142,7 +151,7 @@ class _BobWCDPlayerState extends State<BobWCDPlayer> {
           
           </script>
           <iframe id='bobplayer'
-            style="margin-top: -19px;"
+            style="margin-top: $margin;"
             width="100%" height="100%" 
             src="$src&auto=true" 
             frameborder="0" 
