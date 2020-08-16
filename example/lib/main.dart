@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
@@ -52,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   BobMultiPlayer playerObj;
   double _yPosition = 0;
-  double _width = 200;
+  double _width = 0;
 
   AnimationController _controller;
   Tween<double> _tween;
@@ -62,13 +64,21 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIOverlays([]);
-    Future.delayed(Duration.zero, () {
-      _width = MediaQuery.of(context).size.width;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_width !=  MediaQuery.of(context).size.width) {
+        setState(() {
+          _width = MediaQuery
+              .of(context)
+              .size
+              .width;
+        });
+      }
     });
 
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 100),
+      duration: Duration(milliseconds: 250),
     );
 
     _tween = Tween(
@@ -77,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     );
 
     Animation curve =
-        CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+    CurvedAnimation(parent: _controller, curve: Curves.easeOutBack);
 
     _moveAnim = _tween.animate(curve)
       ..addListener(() {
@@ -129,12 +139,44 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     );
   }
 
+  Widget scaledPlayer() {
+    return Stack(
+      overflow: Overflow.clip,
+      children: <Widget>[
+        Container( //이곳이 작아졌을 때 들어갈 컨텐츠 넣을 곳.
+          width: MediaQuery.of(context).size.width,
+          height: _getScaledHeight(),
+          color: Colors.amber,
+        ),
+        Transform.scale(
+          alignment: Alignment.topLeft,
+          scale: _getScale(),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: bobPlayer(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  double _getScale() {
+    return 1 - (_yPosition / (MediaQuery.of(context).size.height + 300));
+  }
+
+  double _getScaledHeight() {
+    return MediaQuery.of(context).size.width / _getHeightRatio() * _getScale();
+  }
+
   double _getHeightRatio() {
     return MediaQuery.of(context).orientation == Orientation.portrait
         ? 16 / 9
         : MediaQuery.of(context).size.width /
-            (MediaQuery.of(context).size.height -
-                MediaQuery.of(context).viewPadding.top);
+        (MediaQuery.of(context).size.height -
+            MediaQuery.of(context).viewPadding.top);
   }
 
   Widget body() {
@@ -145,23 +187,14 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             MediaQuery.of(context).orientation == Orientation.portrait &&
-                    _width == MediaQuery.of(context).size.width
+                _width == MediaQuery.of(context).size.width
                 ? SizedBox(
-                    height: MediaQuery.of(context).viewPadding.top,
-                  )
+              height: MediaQuery.of(context).viewPadding.top,
+            )
                 : SizedBox.shrink(),
-            Container(
-              width: MediaQuery.of(context).orientation == Orientation.portrait
-                  ? _width
-                  : MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).orientation == Orientation.portrait
-                  ? _width / _getHeightRatio()
-                  : MediaQuery.of(context).size.height -
-                      MediaQuery.of(context).viewPadding.top,
-              child: bobPlayer(),
-            ),
+            scaledPlayer(),
             MediaQuery.of(context).orientation == Orientation.portrait &&
-                    _width == MediaQuery.of(context).size.width
+                _width == MediaQuery.of(context).size.width
                 ? buttons()
                 : SizedBox.shrink(),
           ],
@@ -227,7 +260,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   void _toBottom() {
     _tween.begin = _yPosition;
-    _tween.end = MediaQuery.of(context).size.height - 120;
+    _tween.end = MediaQuery.of(context).size.height - 86;
     _controller.reset();
     _controller.forward();
   }
@@ -289,7 +322,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   } else if (dragEndDetail.velocity.pixelsPerSecond.dy > 1000) {
                     _toBottom();
                   } else {
-                    if (MediaQuery.of(context).size.height / 3 < _yPosition) {
+                    if (MediaQuery.of(context).size.height / 2.5 < _yPosition) {
                       _toBottom();
                     } else {
                       _toTop();
