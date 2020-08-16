@@ -83,6 +83,9 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
           case PlayerState.playing :
             widget.playerState("play", null);
             break;
+          case PlayerState.unknown :
+            widget.playerState("unknown", null);
+            break;
         }
     }
     _playerState = _controller.value.playerState;
@@ -137,7 +140,7 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
 
     if (src.startsWith('http')) {
       if (_playerType == PlayerType.weCanDeo) {
-        _wcdPlayerObj?.setSouce(src);
+        _wcdPlayerObj?.setSource(src);
       } else {
         _playerType = PlayerType.weCanDeo;
         setState(() {
