@@ -142,7 +142,8 @@ class _BobWCDPlayerState extends State<BobWCDPlayer> {
           
           </script>
           <iframe id='bobplayer'
-            width="100%" height="94%" 
+            style="margin-top: -19px;"
+            width="100%" height="100%" 
             src="$src&auto=true" 
             frameborder="0" 
             allowfullscreen 
