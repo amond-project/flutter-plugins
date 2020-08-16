@@ -154,6 +154,7 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
                 widget.playerState(value, param);
               }
               if (value=="complete") {
+                _playerType = PlayerType.none;
                 setState(() {
                   _player = widget.initScreen==null ? Container(color: Colors.black,) : widget.initScreen;
                 });
