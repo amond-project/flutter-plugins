@@ -55,6 +55,7 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
   Widget _player;
 
   PlayerType _playerType = PlayerType.none;
+  bool fullScreen = false;
 
   void listener() {
 //    if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
@@ -87,6 +88,26 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
             widget.playerState("unknown", null);
             break;
         }
+
+      if (_controller.value.isFullScreen) {
+        if (!fullScreen) {
+          fullScreen = true; //한번만 이벤트 발생을 시키기 위해..
+          List<dynamic> params = List();
+          Map<String, bool> param = Map();
+          param["value"] = true;
+          params.add(param);
+          widget.playerState("fullscreen", params);
+        }
+      } else {
+        if (fullScreen) {
+          fullScreen = false;
+          List<dynamic> params = List();
+          Map<String, bool> param = Map();
+          param["value"] = false;
+          params.add(param);
+          widget.playerState("fullscreen", params);
+        }
+      }
     }
     _playerState = _controller.value.playerState;
   }
@@ -158,6 +179,12 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
                 setState(() {
                   _player = widget.initScreen==null ? Container(color: Colors.black,) : widget.initScreen;
                 });
+              } else if (value=="fullscreen") {
+                if ((param[0]["value"])) { //풀 스크린의 경우
+
+                } else { //복원 되는 경우
+
+                }
               }
             },);
         });

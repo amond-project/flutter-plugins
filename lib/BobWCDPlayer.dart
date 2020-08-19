@@ -218,6 +218,7 @@ class _BobWCDPlayerState extends State<BobWCDPlayer> {
         })
         ..addJavaScriptHandler(handlerName: 'FULLSCREEN', callback: (data){
           fullScreen(data);
+          playerState('fullscreen', data);
         });
         },
       onLoadStart: (InAppWebViewController controller, String url) {
