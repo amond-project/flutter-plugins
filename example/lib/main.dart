@@ -154,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           child: Container(
             width: MediaQuery.of(context).size.width,
             child: AspectRatio(
-              aspectRatio: 16 / 9,
+              aspectRatio: _getHeightRatio(),
               child: bobPlayer(),
             ),
           ),
