@@ -38,6 +38,10 @@ class BobMultiPlayer extends StatefulWidget {
     _bobMultiPlayerState.setSource(src);
   }
 
+  void toggleYtFullScreenMode() {
+    _bobMultiPlayerState.toggleYtFullScreenMode();
+  }
+
   Future<String> getState() async {
     return await _bobMultiPlayerState.getState();
   }
