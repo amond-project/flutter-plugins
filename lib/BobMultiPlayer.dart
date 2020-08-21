@@ -55,7 +55,7 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
   Widget _player;
 
   PlayerType _playerType = PlayerType.none;
-  bool fullScreen = false;
+  bool _fullScreen = false;
 
   void listener() {
 //    if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
@@ -90,8 +90,8 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
         }
 
       if (_controller.value.isFullScreen) {
-        if (!fullScreen) {
-          fullScreen = true; //한번만 이벤트 발생을 시키기 위해..
+        if (!_fullScreen) {
+          _fullScreen = true; //한번만 이벤트 발생을 시키기 위해..
           List<dynamic> params = List();
           Map<String, bool> param = Map();
           param["value"] = true;
@@ -99,8 +99,8 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
           widget.playerState("fullscreen", params);
         }
       } else {
-        if (fullScreen) {
-          fullScreen = false;
+        if (_fullScreen) {
+          _fullScreen = false;
           List<dynamic> params = List();
           Map<String, bool> param = Map();
           param["value"] = false;
@@ -214,6 +214,12 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
     _playerType == PlayerType.youTube?_controller?.pause():_wcdPlayerObj?.pause();
   }
 
+  void toggleYtFullScreenMode(){
+    if (_playerType == PlayerType.youTube) {
+      _controller.toggleFullScreenMode();
+    }
+  }
+  
   //          Returns String
   //          – VALUE : idle , playing , pause , buffering
   Future<String> getState() async {
