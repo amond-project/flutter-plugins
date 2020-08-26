@@ -178,7 +178,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             (MediaQuery.of(context).size.height -
                 MediaQuery.of(context).viewPadding.top
                 - MediaQuery.of(context).viewPadding.bottom
-                - 12);
+                - _getExtraPadding());
+  }
+
+  double _getExtraPadding() {
+    return MediaQuery.of(context).viewPadding.bottom > 0 ? 12 : 0;
   }
 
   Widget body() {
