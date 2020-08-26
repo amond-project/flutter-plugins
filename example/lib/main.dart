@@ -182,7 +182,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   double _getExtraPadding() {
-    return MediaQuery.of(context).viewPadding.bottom > 0 ? 12 : 0;
+    return MediaQuery.of(context).viewPadding.bottom > 0 ? 44 : 0;
   }
 
   Widget body() {
@@ -300,7 +300,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         overflow: Overflow.visible,
         children: <Widget>[
           Positioned(
-            top: _yPosition,
+            top: MediaQuery.of(context).orientation == Orientation.portrait ? _yPosition :
+            MediaQuery.of(context).viewPadding.bottom > 0 ? 32  : 0,
             width: MediaQuery.of(context).size.width,
             child: GestureDetector(
               onPanStart: (dragStartDetail) {},
