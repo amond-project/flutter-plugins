@@ -248,6 +248,19 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           },
         ),
         FlatButton(
+          child: Text("General Play"),
+          onPressed: () {
+            playerObj.setSouce("https://videodelivery.net/7bd370ab8d13a65b36198326839f7e9e/manifest/video.m3u8");
+          },
+        ),
+
+        FlatButton(
+          child: Text("General Play 2"),
+          onPressed: () {
+            playerObj.setSouce("https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4");
+          },
+        ),
+        FlatButton(
           child: Text("Pause"),
           onPressed: () {
             playerObj.pause();

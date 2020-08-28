@@ -13,6 +13,8 @@ dependencies:
     sdk: flutter
   flutter_inappwebview: ^4.0.0+4
   youtube_player_flutter: ^7.0.0+7
+  video_player: ^0.10.0+2
+  screen: ^0.0.4
 
 dev_dependencies:
   flutter_test:

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import 'BobWCDPlayer.dart';
+import 'SimpleViewPlayer.dart';
 import 'player_type.dart';
 
 class BobMultiPlayer extends StatefulWidget {
@@ -54,7 +55,8 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
 
   PlayerState _playerState;
   YoutubeMetaData _videoMetaData;
-  YoutubePlayerController _controller;
+  YoutubePlayerController _ytController;
+  SimpleViewPlayer simpleViewPlayer;
 
   Widget _player;
 
@@ -68,8 +70,8 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
 //    }
 
     if (widget.playerState != null && mounted) {
-      if (_playerState != _controller.value.playerState)
-        switch (_controller.value.playerState) {
+      if (_playerState != _ytController.value.playerState)
+        switch (_ytController.value.playerState) {
           case PlayerState.cued :
             widget.playerState("ready", null);
             break;
@@ -93,7 +95,7 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
             break;
         }
 
-      if (_controller.value.isFullScreen) {
+      if (_ytController.value.isFullScreen) {
         if (!_fullScreen) {
           _fullScreen = true; //한번만 이벤트 발생을 시키기 위해..
           List<dynamic> params = List();
@@ -113,11 +115,24 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
         }
       }
     }
-    _playerState = _controller.value.playerState;
+    _playerState = _ytController.value.playerState;
+  }
+
+  Widget createVideoPlayer(String src){
+    return SimpleViewPlayer(src, (value, param) {
+
+      widget.playerState(value, param);
+
+
+      //print(value);
+
+    }, playerObject: (SimpleViewPlayer simpleViewPlayer) {
+       this.simpleViewPlayer = simpleViewPlayer;
+    },);
   }
 
   YoutubePlayer createYoutubePlayer(String vid) {
-    _controller = YoutubePlayerController(
+    _ytController = YoutubePlayerController(
       initialVideoId: vid,
       flags: const YoutubePlayerFlags(
         mute: false,
@@ -131,7 +146,7 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
     )..addListener(listener);
 
     return YoutubePlayer(
-      controller: _controller,
+      controller: _ytController,
       showVideoProgressIndicator: true,
       progressIndicatorColor: Colors.blueAccent,
       onReady: () {
@@ -146,6 +161,8 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
       },
     );
   }
+
+
 
   @override
   void initState() {
@@ -165,38 +182,49 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
 
     if (src.startsWith('http')) {
       if (_playerType == PlayerType.weCanDeo) {
-        _wcdPlayerObj?.setSource(src);
+          _wcdPlayerObj?.setSource(src);
       } else {
-        _playerType = PlayerType.weCanDeo;
-        setState(() {
-          _player = BobWCDPlayer(
-            initVid: src,
-            playerObject: (obj) {
-            _wcdPlayerObj = obj;
-            },
-            playerState: (value, param) {
-              if (widget.playerState != null && mounted) {
-                widget.playerState(value, param);
-              }
-              if (value=="complete") {
-                _playerType = PlayerType.none;
-                setState(() {
-                  _player = widget.initScreen==null ? Container(color: Colors.black,) : widget.initScreen;
-                });
-              } else if (value=="fullscreen") {
-                if ((param[0]["value"])) { //풀 스크린의 경우
-
-                } else { //복원 되는 경우
-
+        if (src.contains("wecandeo")) {
+          _playerType = PlayerType.weCanDeo;
+          setState(() {
+            _player = BobWCDPlayer(
+              initVid: src,
+              playerObject: (obj) {
+                _wcdPlayerObj = obj;
+              },
+              playerState: (value, param) {
+                if (widget.playerState != null && mounted) {
+                  widget.playerState(value, param);
                 }
-              }
-            },);
-        });
+                if (value == "complete") {
+                  _playerType = PlayerType.none;
+                  setState(() {
+                    _player = widget.initScreen == null ? Container(color: Colors.black,) : widget.initScreen;
+                  });
+                } else if (value == "fullscreen") {
+                  if ((param[0]["value"])) { //풀 스크린의 경우
+
+                  } else { //복원 되는 경우
+
+                  }
+                }
+              },);
+          });
+        } else { //일반 플레이어로 생성.
+          if (_playerType == PlayerType.general) {
+            simpleViewPlayer.setSource(src);
+          } else {
+            _playerType = PlayerType.general;
+            setState(() {
+              _player = createVideoPlayer(src);
+            });
+          }
+        }
       }
     }
     else {
       if (_playerType == PlayerType.youTube) {
-        _controller.load(src);
+        _ytController.load(src);
       } else {
         _playerType = PlayerType.youTube;
         setState(() {
@@ -207,20 +235,20 @@ class _BobMultiPlayerState extends State<BobMultiPlayer> {
   }
 
   void play() {
-    _playerType == PlayerType.youTube?_controller?.play(): _wcdPlayerObj?.play();
+    _playerType == PlayerType.youTube?_ytController?.play(): _wcdPlayerObj?.play();
   }
 
   void stop() {
-    _playerType == PlayerType.youTube?_controller?.pause(): _wcdPlayerObj?.stop();
+    _playerType == PlayerType.youTube?_ytController?.pause(): _wcdPlayerObj?.stop();
   }
 
   void pause() {
-    _playerType == PlayerType.youTube?_controller?.pause():_wcdPlayerObj?.pause();
+    _playerType == PlayerType.youTube?_ytController?.pause():_wcdPlayerObj?.pause();
   }
 
   void toggleYtFullScreenMode(){
     if (_playerType == PlayerType.youTube) {
-      _controller.toggleFullScreenMode();
+      _ytController.toggleFullScreenMode();
     }
   }
   
