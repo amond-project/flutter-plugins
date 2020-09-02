@@ -34,7 +34,7 @@ class _SimpleViewPlayerState extends State<SimpleViewPlayer> {
   VideoPlayerController controller;
   VoidCallback listener;
   bool hideBottom = true;
-
+  String _src;
 
   @override
   void initState() {
@@ -72,9 +72,12 @@ class _SimpleViewPlayerState extends State<SimpleViewPlayer> {
   }
 
   void setSource(String src) {
-    controller = VideoPlayerController.network(src);
-    controller.initialize();
-    controller.play();
+    if (_src != src) {
+      _src = src;
+      controller = VideoPlayerController.network(src);
+      controller.initialize();
+      controller.play();
+    }
   }
 
   @override
