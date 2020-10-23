@@ -205,7 +205,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         ? 16 / 9
         : MediaQuery.of(context).size.width /
             (MediaQuery.of(context).size.height -
-                MediaQuery.of(context).viewPadding.top);
+                MediaQuery.of(context).viewPadding.top
+                - MediaQuery.of(context).viewPadding.bottom
+                - _getExtraPadding());
+  }
+
+  double _getExtraPadding() {
+    return MediaQuery.of(context).viewPadding.bottom > 0 ? 44 : 0;
   }
 
   Widget body() {
@@ -271,6 +277,19 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           },
         ),
         FlatButton(
+          child: Text("General Play"),
+          onPressed: () {
+            playerObj.setSouce("https://videodelivery.net/7bd370ab8d13a65b36198326839f7e9e/manifest/video.m3u8");
+          },
+        ),
+
+        FlatButton(
+          child: Text("General Play 2"),
+          onPressed: () {
+            playerObj.setSouce("https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4");
+          },
+        ),
+        FlatButton(
           child: Text("Pause"),
           onPressed: () {
             playerObj.pause();
@@ -323,7 +342,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         overflow: Overflow.visible,
         children: <Widget>[
           Positioned(
-            top: _yPosition,
+            top: MediaQuery.of(context).orientation == Orientation.portrait ? _yPosition :
+            MediaQuery.of(context).viewPadding.bottom > 0 ? 32  : 0,
             width: MediaQuery.of(context).size.width,
             child: GestureDetector(
               onPanStart: (dragStartDetail) {},

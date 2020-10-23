@@ -1,5 +1,6 @@
 enum PlayerType {
   none,
   weCanDeo,
-  youTube
+  youTube,
+  general
 }
