@@ -124,6 +124,9 @@ class _BobWCDPlayerState extends State<BobWCDPlayer> {
               api.onEvent(smIframeEvent.FULLSCREEN , function(data){
                 window.flutter_inappwebview.callHandler('FULLSCREEN', data);
               });
+              api.onEvent(smIframeEvent.CONTROLS , function(data){
+                window.flutter_inappwebview.callHandler('CONTROLS', data);
+              });
             }
             script.async = true
             script.src = 'https://play.wecandeo.com/html/utils/iframeAPI.js'
@@ -215,6 +218,9 @@ class _BobWCDPlayerState extends State<BobWCDPlayer> {
         })
         ..addJavaScriptHandler(handlerName: 'TIME', callback: (data){
           playerState('time', data);
+        })
+        ..addJavaScriptHandler(handlerName: 'CONTROLS', callback: (data){
+          playerState('controls', data);
         })
         ..addJavaScriptHandler(handlerName: 'FULLSCREEN', callback: (data){
           fullScreen(data);

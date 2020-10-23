@@ -60,6 +60,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   Tween<double> _tween;
   Animation<double> _moveAnim;
 
+  bool isFullScreen = false;
+  bool isShowControls = false;
+
   @override
   void initState() {
     super.initState();
@@ -124,6 +127,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       },
       playerState: (value, param) {
         print("----" + value + "," + param.toString());
+        if (value == 'controls') {
+          Map<String, dynamic> data = Map<String, dynamic>.from(param[0]);
+          setState(() {
+            isShowControls = data['value'];
+          });
+        }
       },
       initScreen: Container(
         width: MediaQuery.of(context).size.width,
@@ -159,6 +168,26 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             ),
           ),
         ),
+        Visibility(
+          visible: isShowControls,
+          child: Container(
+            child: RaisedButton(
+              child: Text('풀스크린'),
+              color: Colors.red,
+              onPressed: () {
+                print('풀스크린');
+                if (!isFullScreen) {
+                  SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
+                } else {
+                  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+                }
+                setState(() {
+                  isFullScreen = !isFullScreen;
+                });
+              },
+            ),
+          ),
+        )
       ],
     );
   }
@@ -232,7 +261,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           onPressed: () {
             //playerObj.stop();
             playerObj.setSouce(
-                "http://play.wecandeo.com/video/v/?key=BOKNS9AQWrHtFFoZ3udAS4k647dHAtlqG4eh4nY4J3bKZbvfbASNbLKGKgfKFPwplFGipd7WMv3b27rE983vAVwieie");
+                "http://play.wecandeo.com/video/v/?key=BOKNS9AQWrFXVTfipXQ6c1hsN1ZaB9TxKej10EZ2nAvKS2hTVYUqb8Ltld8RYxyvCe3MhA14YjYAie");
           },
         ),
         FlatButton(
